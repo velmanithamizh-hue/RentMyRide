@@ -1,0 +1,440 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Bookings | RentMyRide Admin</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f3f7f4;
+      color: #26332e;
+    }
+
+    header {
+      background: #123c2d;
+      color: white;
+      padding: 20px 35px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #75e0a0;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      background: #276448;
+      padding: 10px 15px;
+      border-radius: 7px;
+    }
+
+    .container {
+      max-width: 1250px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .heading {
+      margin-bottom: 25px;
+    }
+
+    .heading h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .heading p {
+      color: #718078;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .summary-card {
+      background: white;
+      padding: 22px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px #00000008;
+    }
+
+    .summary-card p {
+      color: #718078;
+      margin-bottom: 12px;
+    }
+
+    .summary-card h2 {
+      color: #17643d;
+      font-size: 28px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .toolbar input,
+    .toolbar select {
+      padding: 12px;
+      border: 1px solid #d7e1da;
+      border-radius: 8px;
+      background: white;
+      font-size: 14px;
+    }
+
+    .toolbar input {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .toolbar select {
+      min-width: 180px;
+    }
+
+    .table-wrapper {
+      background: white;
+      border-radius: 12px;
+      overflow-x: auto;
+      box-shadow: 0 3px 12px #00000008;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 950px;
+    }
+
+    th,
+    td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid #e5ebe7;
+      font-size: 14px;
+    }
+
+    th {
+      background: #edf5ef;
+      color: #17643d;
+    }
+
+    td {
+      color: #536259;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 7px 11px;
+      border-radius: 20px;
+      font-size: 12px;
+      background: #fff0d6;
+      color: #986000;
+    }
+
+    .status.confirmed {
+      background: #e0f5e8;
+      color: #17643d;
+    }
+
+    .status.completed {
+      background: #e8eafc;
+      color: #4d54a1;
+    }
+
+    .status.cancelled {
+      background: #fde8e7;
+      color: #b52e2a;
+    }
+
+    .action-select {
+      padding: 8px;
+      border: 1px solid #d7e1da;
+      border-radius: 6px;
+      background: white;
+    }
+
+    .empty {
+      background: white;
+      padding: 35px;
+      text-align: center;
+      color: #718078;
+      border-radius: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 18px;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">RentMy<span>Ride</span></div>
+    <a href="admin-dashboard.html">Back to Dashboard</a>
+  </header>
+
+  <main class="container">
+
+    <div class="heading">
+      <h1>Manage Bookings</h1>
+      <p>View and manage customer vehicle rental bookings.</p>
+    </div>
+
+    <!-- Booking Summary -->
+    <section class="summary">
+
+      <div class="summary-card">
+        <p>Total Bookings</p>
+        <h2 id="totalBookings">0</h2>
+      </div>
+
+      <div class="summary-card">
+        <p>Pending</p>
+        <h2 id="pendingBookings">0</h2>
+      </div>
+
+      <div class="summary-card">
+        <p>Confirmed</p>
+        <h2 id="confirmedBookings">0</h2>
+      </div>
+
+      <div class="summary-card">
+        <p>Completed</p>
+        <h2 id="completedBookings">0</h2>
+      </div>
+
+    </section>
+
+    <!-- Search and Filter -->
+    <div class="toolbar">
+
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="Search customer, booking ID or vehicle..."
+      >
+
+      <select id="statusFilter">
+        <option value="All">All Status</option>
+        <option value="Pending">Pending</option>
+        <option value="Confirmed">Confirmed</option>
+        <option value="Completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+
+    </div>
+
+    <!-- Booking Table -->
+    <section class="table-wrapper">
+
+      <table>
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Customer</th>
+            <th>Vehicle</th>
+            <th>Pickup Location</th>
+            <th>Rental Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Update Status</th>
+          </tr>
+        </thead>
+
+        <tbody id="bookingTable">
+        </tbody>
+      </table>
+
+    </section>
+
+    <div id="emptyMessage" class="empty" style="margin-top:20px;">
+      <h3>No bookings available</h3>
+      <p>Customer bookings will appear here after backend connection.</p>
+    </div>
+
+  </main>
+
+  <script>
+
+    /*
+      Frontend demo only.
+      Real booking records must be loaded from Firebase.
+    */
+
+    const bookings = [];
+
+    const bookingTable = document.getElementById("bookingTable");
+    const searchInput = document.getElementById("searchInput");
+    const statusFilter = document.getElementById("statusFilter");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function updateSummary() {
+      document.getElementById("totalBookings").textContent =
+        bookings.length;
+
+      document.getElementById("pendingBookings").textContent =
+        bookings.filter(b => b.status === "Pending").length;
+
+      document.getElementById("confirmedBookings").textContent =
+        bookings.filter(b => b.status === "Confirmed").length;
+
+      document.getElementById("completedBookings").textContent =
+        bookings.filter(b => b.status === "Completed").length;
+    }
+
+    function getStatusClass(status) {
+      if (status === "Confirmed") return "confirmed";
+      if (status === "Completed") return "completed";
+      if (status === "Cancelled") return "cancelled";
+      return "";
+    }
+
+    function renderBookings() {
+      const searchText = searchInput.value.toLowerCase().trim();
+      const selectedStatus = statusFilter.value;
+
+      const filteredBookings = bookings.filter(booking => {
+        const searchableText = (
+          booking.id + " " +
+          booking.customer + " " +
+          booking.vehicle
+        ).toLowerCase();
+
+        const matchesSearch = searchableText.includes(searchText);
+
+        const matchesStatus =
+          selectedStatus === "All" ||
+          booking.status === selectedStatus;
+
+        return matchesSearch && matchesStatus;
+      });
+
+      bookingTable.innerHTML = "";
+
+      filteredBookings.forEach(booking => {
+        const originalIndex = bookings.indexOf(booking);
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${escapeHTML(booking.id)}</td>
+          <td>${escapeHTML(booking.customer)}</td>
+          <td>${escapeHTML(booking.vehicle)}</td>
+          <td>${escapeHTML(booking.location)}</td>
+          <td>${escapeHTML(booking.date)}</td>
+          <td>₹${escapeHTML(booking.amount)}</td>
+
+          <td>
+            <span class="status ${getStatusClass(booking.status)}">
+              ${escapeHTML(booking.status)}
+            </span>
+          </td>
+
+          <td>
+            <select class="action-select"
+              data-index="${originalIndex}"
+              aria-label="Update booking status">
+
+              <option value="Pending"
+                ${booking.status === "Pending" ? "selected" : ""}>
+                Pending
+              </option>
+
+              <option value="Confirmed"
+                ${booking.status === "Confirmed" ? "selected" : ""}>
+                Confirmed
+              </option>
+
+              <option value="Completed"
+                ${booking.status === "Completed" ? "selected" : ""}>
+                Completed
+              </option>
+
+              <option value="Cancelled"
+                ${booking.status === "Cancelled" ? "selected" : ""}>
+                Cancelled
+              </option>
+
+            </select>
+          </td>
+        `;
+
+        bookingTable.appendChild(row);
+      });
+
+      emptyMessage.style.display =
+        filteredBookings.length === 0 ? "block" : "none";
+
+      updateSummary();
+    }
+
+    bookingTable.addEventListener("change", function(event) {
+      const select = event.target.closest("select[data-index]");
+
+      if (!select) return;
+
+      const index = Number(select.dataset.index);
+
+      if (!bookings[index]) return;
+
+      bookings[index].status = select.value;
+
+      renderBookings();
+    });
+
+    searchInput.addEventListener("input", renderBookings);
+    statusFilter.addEventListener("change", renderBookings);
+
+    renderBookings();
+
+  </script>
+
+  <script src="rentmyride-app.js"></script>
+</body>
+</html>

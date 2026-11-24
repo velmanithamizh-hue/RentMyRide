@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RentMyRide | Admin Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #e3f5ed, #f3f7f5);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            padding: 35px 30px;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.10);
+        }
+
+        .logo {
+            text-align: center;
+            color: #087f5b;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .admin-icon {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #e3f5ed;
+            border-radius: 50%;
+            font-size: 35px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #222;
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #d5d5d5;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        input:focus {
+            border-color: #087f5b;
+            box-shadow: 0 0 0 3px rgba(8, 127, 91, 0.1);
+        }
+
+        .password-box {
+            position: relative;
+        }
+
+        .password-box input {
+            padding-right: 60px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            border: none;
+            background: none;
+            color: #087f5b;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #087f5b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .login-btn:hover {
+            background: #066b4d;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #087f5b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="logo">RentMyRide</div>
+
+        <div class="admin-icon">🔐</div>
+
+        <h2>Admin Login</h2>
+
+        <p class="description">
+            Welcome back! Sign in to manage your platform.
+        </p>
+
+        <form id="adminLoginForm">
+
+            <label for="adminEmail">Admin Email</label>
+
+            <input
+                type="email"
+                id="adminEmail"
+                placeholder="Enter admin email"
+                autocomplete="username"
+                required
+            >
+
+            <label for="adminPassword">Password</label>
+
+            <div class="password-box">
+                <input
+                    type="password"
+                    id="adminPassword"
+                    placeholder="Enter admin password"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button
+                    type="button"
+                    class="toggle-password"
+                    id="togglePassword">
+                    Show
+                </button>
+            </div>
+
+            <button type="submit" class="login-btn">
+                Login to Dashboard
+            </button>
+
+            <p id="message" role="status"></p>
+
+        </form>
+
+        <a href="login.html" class="back-link">
+            ← Back to User Login
+        </a>
+
+        <div class="footer">
+            © 2026 RentMyRide. Admin Portal.
+        </div>
+
+    </div>
+
+    <script>
+        const form = document.getElementById("adminLoginForm");
+        const emailInput = document.getElementById("adminEmail");
+        const passwordInput = document.getElementById("adminPassword");
+        const message = document.getElementById("message");
+        const togglePassword = document.getElementById("togglePassword");
+
+        // Demo admin credentials
+        const ADMIN_EMAIL = "admin@rentmyride.com";
+        const ADMIN_PASSWORD = "Admin@123";
+
+        // Show or hide password
+        togglePassword.addEventListener("click", function() {
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                togglePassword.textContent = "Hide";
+            } else {
+                passwordInput.type = "password";
+                togglePassword.textContent = "Show";
+            }
+        });
+
+        // Admin login
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const email = emailInput.value.trim().toLowerCase();
+            const password = passwordInput.value;
+
+            if (
+                email === ADMIN_EMAIL &&
+                password === ADMIN_PASSWORD
+            ) {
+                message.style.color = "#087f5b";
+                message.textContent = "Login successful!";
+
+                sessionStorage.setItem("adminLoggedIn", "true");
+
+                setTimeout(function() {
+                    window.location.href = "admin-dashboard.html";
+                }, 800);
+
+            } else {
+                message.style.color = "#dc2626";
+                message.textContent =
+                    "Invalid admin email or password.";
+            }
+        });
+    </script>
+
+  <script src="rentmyride-app.js"></script>
+</body>
+</html>
+

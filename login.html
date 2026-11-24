@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Ride Tamil Nadu</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #e8f2ff, #f5f7ff);
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 35px 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(20, 50, 100, 0.12);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            color: #172554;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .password-box {
+            position: relative;
+        }
+
+        .password-box input {
+            padding-right: 65px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            color: #2563eb;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .forgot {
+            display: block;
+            text-align: right;
+            margin-top: 10px;
+            color: #2563eb;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.2s;
+        }
+
+        .login-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .message {
+            display: none;
+            margin-top: 14px;
+            text-align: center;
+            font-size: 13px;
+            color: #dc2626;
+            line-height: 1.5;
+        }
+
+        .signup {
+            margin-top: 24px;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .signup a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="logo">🚗</div>
+
+        <h1>Welcome Back!</h1>
+        <p class="subtitle">
+            Login to discover and book rental vehicles
+            anywhere in Tamil Nadu.
+        </p>
+
+        <form id="loginForm">
+
+            <div class="form-group">
+                <label for="email">Email or Phone Number</label>
+                <input
+                    type="text"
+                    id="email"
+                    placeholder="Enter email or phone number"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+
+                <div class="password-box">
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        maxlength="8"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        id="togglePassword"
+                    >Show</button>
+                </div>
+
+                <a href="#" class="forgot" id="forgotLink">
+                    Forgot Password?
+                </a>
+            </div>
+
+            <button type="submit" class="login-btn">
+                Login
+            </button>
+
+            <p class="message" id="message"></p>
+
+        </form>
+
+        <p class="signup">
+            Don't have an account?
+            <a href="signup.html">Sign Up</a>
+        </p>
+
+        <p class="footer">
+            © 2026 Ride Tamil Nadu
+        </p>
+
+    </div>
+
+    <script>
+        const password = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+        const loginForm = document.getElementById("loginForm");
+        const message = document.getElementById("message");
+
+        togglePassword.addEventListener("click", function () {
+            if (password.type === "password") {
+                password.type = "text";
+                togglePassword.textContent = "Hide";
+            } else {
+                password.type = "password";
+                togglePassword.textContent = "Show";
+            }
+        });
+
+        loginForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            message.style.display = "block";
+            message.textContent =
+                "Login backend connection is not added yet. Please connect the backend to verify your account.";
+        });
+
+        document.getElementById("forgotLink").addEventListener("click", function (event) {
+    event.preventDefault();
+    window.location.href = "forgot_password.html";
+    });
+        
+    </script>
+
+  <script src="rentmyride-app.js"></script>
+</body>
+</html>

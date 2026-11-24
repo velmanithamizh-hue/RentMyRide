@@ -1,0 +1,370 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Providers | RentMyRide</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7f6;
+      color: #26332e;
+    }
+
+    header {
+      background: #123c2d;
+      color: white;
+      padding: 20px 35px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    header h2 span {
+      color: #75e0a0;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      background: #276448;
+      padding: 10px 15px;
+      border-radius: 7px;
+    }
+
+    .container {
+      max-width: 1150px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .heading {
+      margin-bottom: 25px;
+    }
+
+    .heading h1 {
+      font-size: 27px;
+      margin-bottom: 8px;
+    }
+
+    .heading p {
+      color: #718078;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .summary-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px #00000008;
+    }
+
+    .summary-card p {
+      color: #718078;
+      margin-bottom: 12px;
+    }
+
+    .summary-card h2 {
+      color: #17643d;
+      font-size: 28px;
+    }
+
+    .provider-card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px #00000008;
+      margin-bottom: 20px;
+    }
+
+    .provider-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .provider-top h2 {
+      font-size: 20px;
+    }
+
+    .status {
+      background: #fff0d6;
+      color: #986000;
+      padding: 7px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    .details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .detail {
+      background: #f7faf8;
+      padding: 13px;
+      border-radius: 8px;
+    }
+
+    .detail small {
+      color: #718078;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .detail p {
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+
+    .documents {
+      border-top: 1px solid #e5ebe7;
+      padding-top: 18px;
+      margin-bottom: 20px;
+    }
+
+    .documents h3 {
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .documents p {
+      color: #64736a;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      padding: 11px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .approve {
+      background: #17643d;
+      color: white;
+    }
+
+    .reject {
+      background: #d9534f;
+      color: white;
+    }
+
+    .empty {
+      background: white;
+      padding: 35px;
+      text-align: center;
+      border-radius: 12px;
+      color: #718078;
+    }
+
+    @media (max-width: 650px) {
+      header {
+        padding: 18px;
+      }
+
+      .summary,
+      .details {
+        grid-template-columns: 1fr;
+      }
+
+      .provider-top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h2>RentMy<span>Ride</span></h2>
+    <a href="admin-dashboard.html">Back to Dashboard</a>
+  </header>
+
+  <main class="container">
+
+    <div class="heading">
+      <h1>Manage Providers</h1>
+      <p>Review and verify rental shop registrations.</p>
+    </div>
+
+    <section class="summary">
+      <div class="summary-card">
+        <p>Total Providers</p>
+        <h2 id="total">0</h2>
+      </div>
+
+      <div class="summary-card">
+        <p>Pending</p>
+        <h2 id="pending">0</h2>
+      </div>
+
+      <div class="summary-card">
+        <p>Approved</p>
+        <h2 id="approved">0</h2>
+      </div>
+    </section>
+
+    <section id="providerList">
+      <div class="empty">
+        <h3>No provider registrations yet</h3>
+        <p>New provider applications will appear here after backend connection.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /*
+      Demo only:
+      This page currently has no Firebase connection.
+      Provider information and documents will appear
+      here after secure backend integration.
+    */
+
+    const providers = [];
+
+    function updateSummary() {
+      document.getElementById("total").textContent =
+        providers.length;
+
+      document.getElementById("pending").textContent =
+        providers.filter(p => p.status === "Pending").length;
+
+      document.getElementById("approved").textContent =
+        providers.filter(p => p.status === "Approved").length;
+    }
+
+    function renderProviders() {
+      const list = document.getElementById("providerList");
+
+      if (providers.length === 0) {
+        list.innerHTML = `
+          <div class="empty">
+            <h3>No provider registrations yet</h3>
+            <p>New provider applications will appear here after backend connection.</p>
+          </div>
+        `;
+        updateSummary();
+        return;
+      }
+
+      list.innerHTML = "";
+
+      providers.forEach((provider, index) => {
+        const card = document.createElement("div");
+        card.className = "provider-card";
+
+        card.innerHTML = `
+          <div class="provider-top">
+            <h2>${escapeHTML(provider.shopName)}</h2>
+            <span class="status">${escapeHTML(provider.status)}</span>
+          </div>
+
+          <div class="details">
+            <div class="detail">
+              <small>Owner Name</small>
+              <p>${escapeHTML(provider.ownerName)}</p>
+            </div>
+
+            <div class="detail">
+              <small>Phone Number</small>
+              <p>${escapeHTML(provider.phone)}</p>
+            </div>
+
+            <div class="detail">
+              <small>Shop Address</small>
+              <p>${escapeHTML(provider.address)}</p>
+            </div>
+
+            <div class="detail">
+              <small>Landmark</small>
+              <p>${escapeHTML(provider.landmark)}</p>
+            </div>
+          </div>
+
+          <div class="documents">
+            <h3>Verification Documents</h3>
+            <p>Shop Proof: ${escapeHTML(provider.shopProof || "Not uploaded")}</p>
+            <p>Vehicle RC: ${escapeHTML(provider.rcProof || "Not uploaded")}</p>
+          </div>
+
+          <div class="actions">
+            <button class="approve" data-index="${index}" data-action="approve">
+              Approve
+            </button>
+            <button class="reject" data-index="${index}" data-action="reject">
+              Reject
+            </button>
+          </div>
+        `;
+
+        list.appendChild(card);
+      });
+
+      updateSummary();
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    document.getElementById("providerList").addEventListener("click", event => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+
+      const index = Number(button.dataset.index);
+      const action = button.dataset.action;
+
+      if (!providers[index]) return;
+
+      if (action === "approve") {
+        providers[index].status = "Approved";
+      } else if (action === "reject") {
+        providers[index].status = "Rejected";
+      }
+
+      renderProviders();
+    });
+
+    renderProviders();
+  </script>
+
+  <script src="rentmyride-app.js"></script>
+</body>
+</html>

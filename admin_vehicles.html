@@ -1,0 +1,493 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Vehicles | RentMyRide Admin</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f3f7f4;
+      color: #26332e;
+    }
+
+    header {
+      background: #123c2d;
+      color: white;
+      padding: 20px 35px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #75e0a0;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      background: #276448;
+      padding: 10px 15px;
+      border-radius: 7px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .heading {
+      margin-bottom: 25px;
+    }
+
+    .heading h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .heading p {
+      color: #718078;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .summary-card {
+      background: white;
+      padding: 22px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px #00000008;
+    }
+
+    .summary-card p {
+      color: #718078;
+      margin-bottom: 12px;
+    }
+
+    .summary-card h2 {
+      color: #17643d;
+      font-size: 28px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar input,
+    .toolbar select {
+      padding: 12px;
+      border: 1px solid #d7e1da;
+      border-radius: 8px;
+      background: white;
+      font-size: 14px;
+    }
+
+    .toolbar input {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .toolbar select {
+      min-width: 180px;
+    }
+
+    .vehicle-card {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px #00000008;
+      margin-bottom: 20px;
+    }
+
+    .vehicle-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .vehicle-top h2 {
+      font-size: 20px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      background: #fff0d6;
+      color: #986000;
+    }
+
+    .details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .detail {
+      background: #f7faf8;
+      padding: 13px;
+      border-radius: 8px;
+    }
+
+    .detail small {
+      display: block;
+      color: #718078;
+      margin-bottom: 6px;
+    }
+
+    .detail p {
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+
+    .documents {
+      border-top: 1px solid #e5ebe7;
+      padding-top: 18px;
+      margin-bottom: 20px;
+    }
+
+    .documents h3 {
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .documents p {
+      color: #64736a;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      padding: 11px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .approve {
+      background: #17643d;
+      color: white;
+    }
+
+    .reject {
+      background: #d9534f;
+      color: white;
+    }
+
+    .remove {
+      background: #e7ece9;
+      color: #26332e;
+    }
+
+    .empty {
+      background: white;
+      padding: 35px;
+      text-align: center;
+      border-radius: 12px;
+      color: #718078;
+    }
+
+    @media (max-width: 800px) {
+      .details {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 18px;
+      }
+
+      .summary,
+      .details {
+        grid-template-columns: 1fr;
+      }
+
+      .vehicle-top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">RentMy<span>Ride</span></div>
+    <a href="admin-dashboard.html">Back to Dashboard</a>
+  </header>
+
+  <main class="container">
+
+    <div class="heading">
+      <h1>Manage Vehicles</h1>
+      <p>Review and verify vehicles listed by rental providers.</p>
+    </div>
+
+    <!-- Summary -->
+    <section class="summary">
+
+      <div class="summary-card">
+        <p>Total Vehicles</p>
+        <h2 id="totalVehicles">0</h2>
+      </div>
+
+      <div class="summary-card">
+        <p>Pending Verification</p>
+        <h2 id="pendingVehicles">0</h2>
+      </div>
+
+      <div class="summary-card">
+        <p>Approved Vehicles</p>
+        <h2 id="approvedVehicles">0</h2>
+      </div>
+
+    </section>
+
+    <!-- Search and Filter -->
+    <div class="toolbar">
+
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="Search vehicle model or registration number..."
+      >
+
+      <select id="statusFilter">
+        <option value="All">All Status</option>
+        <option value="Pending">Pending</option>
+        <option value="Approved">Approved</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+
+    </div>
+
+    <!-- Vehicle List -->
+    <section id="vehicleList">
+
+      <div class="empty">
+        <h3>No vehicles available</h3>
+        <p>
+          Provider vehicle registrations will appear here
+          after backend connection.
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+
+    /*
+      Frontend demo only.
+      Real vehicle information must be loaded from Firebase.
+    */
+
+    const vehicles = [];
+
+    const vehicleList = document.getElementById("vehicleList");
+    const searchInput = document.getElementById("searchInput");
+    const statusFilter = document.getElementById("statusFilter");
+
+    function updateSummary() {
+      document.getElementById("totalVehicles").textContent =
+        vehicles.length;
+
+      document.getElementById("pendingVehicles").textContent =
+        vehicles.filter(vehicle => vehicle.status === "Pending").length;
+
+      document.getElementById("approvedVehicles").textContent =
+        vehicles.filter(vehicle => vehicle.status === "Approved").length;
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function renderVehicles() {
+      const searchText = searchInput.value.toLowerCase().trim();
+      const selectedStatus = statusFilter.value;
+
+      const filteredVehicles = vehicles.filter(vehicle => {
+        const matchesSearch =
+          vehicle.model.toLowerCase().includes(searchText) ||
+          vehicle.registration.toLowerCase().includes(searchText);
+
+        const matchesStatus =
+          selectedStatus === "All" ||
+          vehicle.status === selectedStatus;
+
+        return matchesSearch && matchesStatus;
+      });
+
+      if (filteredVehicles.length === 0) {
+        vehicleList.innerHTML = `
+          <div class="empty">
+            <h3>No vehicles found</h3>
+            <p>There are no matching vehicle registrations.</p>
+          </div>
+        `;
+
+        updateSummary();
+        return;
+      }
+
+      vehicleList.innerHTML = "";
+
+      filteredVehicles.forEach(vehicle => {
+        const originalIndex = vehicles.indexOf(vehicle);
+
+        const card = document.createElement("div");
+        card.className = "vehicle-card";
+
+        card.innerHTML = `
+          <div class="vehicle-top">
+            <h2>${escapeHTML(vehicle.model)}</h2>
+            <span class="status">${escapeHTML(vehicle.status)}</span>
+          </div>
+
+          <div class="details">
+
+            <div class="detail">
+              <small>Vehicle Type</small>
+              <p>${escapeHTML(vehicle.type)}</p>
+            </div>
+
+            <div class="detail">
+              <small>Registration Number</small>
+              <p>${escapeHTML(vehicle.registration)}</p>
+            </div>
+
+            <div class="detail">
+              <small>Provider / Shop</small>
+              <p>${escapeHTML(vehicle.provider)}</p>
+            </div>
+
+            <div class="detail">
+              <small>Rent Per Day</small>
+              <p>₹${escapeHTML(vehicle.rent)}</p>
+            </div>
+
+            <div class="detail">
+              <small>Location</small>
+              <p>${escapeHTML(vehicle.location)}</p>
+            </div>
+
+            <div class="detail">
+              <small>Availability</small>
+              <p>${escapeHTML(vehicle.availability)}</p>
+            </div>
+
+          </div>
+
+          <div class="documents">
+            <h3>Verification Documents</h3>
+            <p>RC Proof: ${escapeHTML(vehicle.rcProof || "Not uploaded")}</p>
+            <p>Vehicle Photos: ${escapeHTML(vehicle.photos || "Not uploaded")}</p>
+          </div>
+
+          <div class="actions">
+            <button class="approve" data-index="${originalIndex}" data-action="approve">
+              Approve
+            </button>
+
+            <button class="reject" data-index="${originalIndex}" data-action="reject">
+              Reject
+            </button>
+
+            <button class="remove" data-index="${originalIndex}" data-action="remove">
+              Remove Listing
+            </button>
+          </div>
+        `;
+
+        vehicleList.appendChild(card);
+      });
+
+      updateSummary();
+    }
+
+    vehicleList.addEventListener("click", function(event) {
+      const button = event.target.closest("button[data-action]");
+
+      if (!button) return;
+
+      const index = Number(button.dataset.index);
+      const action = button.dataset.action;
+
+      if (!vehicles[index]) return;
+
+      if (action === "approve") {
+        vehicles[index].status = "Approved";
+      }
+
+      if (action === "reject") {
+        vehicles[index].status = "Rejected";
+      }
+
+      if (action === "remove") {
+        const confirmRemove = confirm(
+          "Are you sure you want to remove this vehicle listing?"
+        );
+
+        if (!confirmRemove) return;
+
+        vehicles.splice(index, 1);
+      }
+
+      renderVehicles();
+    });
+
+    searchInput.addEventListener("input", renderVehicles);
+    statusFilter.addEventListener("change", renderVehicles);
+
+    renderVehicles();
+
+  </script>
+
+  <script src="rentmyride-app.js"></script>
+</body>
+</html>

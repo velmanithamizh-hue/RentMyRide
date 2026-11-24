@@ -1,0 +1,431 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Provider Registration | RentMyRide</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f3f7f4;
+      color: #26332e;
+    }
+
+    header {
+      background: #123c2d;
+      color: white;
+      padding: 20px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #75e0a0;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      background: #276448;
+      padding: 10px 15px;
+      border-radius: 7px;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .intro h1 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .intro p {
+      color: #718078;
+      line-height: 1.6;
+    }
+
+    .form-card {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 5px 25px #00000008;
+    }
+
+    .section-title {
+      font-size: 19px;
+      color: #17643d;
+      margin: 25px 0 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e2eae5;
+    }
+
+    .section-title:first-child {
+      margin-top: 0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d7e1da;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #17643d;
+      box-shadow: 0 0 0 3px #17643d15;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    input[type="file"] {
+      background: #f8faf9;
+      padding: 10px;
+    }
+
+    .hint {
+      color: #7b8981;
+      font-size: 12px;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .declaration {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 25px 0;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #59675f;
+    }
+
+    .declaration input {
+      width: auto;
+      margin-top: 3px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: #17643d;
+      color: white;
+      border: none;
+      border-radius: 9px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background: #10472b;
+    }
+
+    .message {
+      display: none;
+      margin-top: 18px;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .message.info {
+      display: block;
+      background: #fff5df;
+      color: #805500;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #7b8981;
+      font-size: 13px;
+    }
+
+    @media (max-width: 650px) {
+      header {
+        padding: 18px;
+      }
+
+      .container {
+        margin: 25px auto;
+      }
+
+      .form-card {
+        padding: 20px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full-width {
+        grid-column: auto;
+      }
+
+      .intro h1 {
+        font-size: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">RentMy<span>Ride</span></div>
+    <a href="login.html">Back to Login</a>
+  </header>
+
+  <main class="container">
+
+    <div class="intro">
+      <h1>Register Your Rental Shop</h1>
+      <p>
+        Join RentMyRide and make your rental vehicles available
+        to customers across Tamil Nadu.
+      </p>
+    </div>
+
+    <div class="form-card">
+
+      <form id="providerForm">
+
+        <!-- Shop Details -->
+        <h2 class="section-title">Shop Information</h2>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="shopName">Shop Name *</label>
+            <input type="text" id="shopName"
+              placeholder="Enter your shop name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="ownerName">Owner Name *</label>
+            <input type="text" id="ownerName"
+              placeholder="Enter owner name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Mobile Number *</label>
+            <input type="tel" id="phone"
+              placeholder="10-digit mobile number"
+              pattern="[6-9][0-9]{9}"
+              maxlength="10" required>
+            <span class="hint">Enter a valid Indian mobile number.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email"
+              placeholder="example@gmail.com">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="address">Shop Address *</label>
+            <textarea id="address"
+              placeholder="Door number, street, area, city, Tamil Nadu"
+              required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="landmark">Nearby Landmark *</label>
+            <input type="text" id="landmark"
+              placeholder="Near bus stand / temple" required>
+          </div>
+
+          <div class="form-group">
+            <label for="pincode">Pincode *</label>
+            <input type="text" id="pincode"
+              placeholder="6-digit pincode"
+              pattern="[0-9]{6}"
+              maxlength="6" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="shopProof">Shop Proof Document *</label>
+            <input type="file" id="shopProof"
+              accept=".pdf,.jpg,.jpeg,.png" required>
+            <span class="hint">
+              Upload applicable shop/business proof. PDF or image format.
+            </span>
+          </div>
+
+        </div>
+
+        <!-- Vehicle Details -->
+        <h2 class="section-title">Vehicle Information</h2>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="vehicleType">Vehicle Type *</label>
+            <select id="vehicleType" required>
+              <option value="">Select vehicle type</option>
+              <option value="Cycle">Cycle</option>
+              <option value="Scooter">Scooter</option>
+              <option value="Bike">Bike</option>
+              <option value="Car">Car</option>
+              <option value="Van">Van</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="vehicleModel">Vehicle Model *</label>
+            <input type="text" id="vehicleModel"
+              placeholder="Example: Honda Activa" required>
+          </div>
+
+          <div class="form-group">
+            <label for="registrationNumber">
+              Vehicle Registration Number
+            </label>
+            <input type="text" id="registrationNumber"
+              placeholder="Example: TN 01 AB 1234">
+          </div>
+
+          <div class="form-group">
+            <label for="rent">Rent Per Day (₹) *</label>
+            <input type="number" id="rent"
+              placeholder="Enter daily rent"
+              min="1" required>
+          </div>
+
+          <div class="form-group">
+            <label for="rcProof">Vehicle RC Proof *</label>
+            <input type="file" id="rcProof"
+              accept=".pdf,.jpg,.jpeg,.png" required>
+            <span class="hint">
+              Upload RC document for verification.
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="vehiclePhotos">Vehicle Photos *</label>
+            <input type="file" id="vehiclePhotos"
+              accept="image/*" multiple required>
+            <span class="hint">
+              Upload clear photos of the actual vehicle.
+            </span>
+          </div>
+
+        </div>
+
+        <label class="declaration">
+          <input type="checkbox" id="declaration" required>
+          <span>
+            I confirm that the shop and vehicle details provided are
+            correct. I agree to submit the documents for verification.
+          </span>
+        </label>
+
+        <button type="submit" class="submit-btn">
+          Submit for Verification
+        </button>
+
+        <div id="message" class="message"></div>
+
+      </form>
+
+    </div>
+
+  </main>
+
+  <footer>
+    © 2026 RentMyRide | Vehicle Rental Platform
+  </footer>
+
+  <script>
+    const providerForm = document.getElementById("providerForm");
+    const message = document.getElementById("message");
+
+    providerForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const phone = document.getElementById("phone").value.trim();
+      const pincode = document.getElementById("pincode").value.trim();
+      const rent = Number(document.getElementById("rent").value);
+
+      if (!/^[6-9][0-9]{9}$/.test(phone)) {
+        alert("Please enter a valid 10-digit Indian mobile number.");
+        return;
+      }
+
+      if (!/^[0-9]{6}$/.test(pincode)) {
+        alert("Please enter a valid 6-digit pincode.");
+        return;
+      }
+
+      if (rent <= 0) {
+        alert("Daily rent must be greater than zero.");
+        return;
+      }
+
+      message.className = "message info";
+      message.textContent =
+        "Your form is valid. This is currently a frontend demo. " +
+        "Your details and uploaded documents have NOT been saved or uploaded. " +
+        "Firebase integration is required to submit this application securely.";
+    });
+  </script>
+
+  <script src="rentmyride-app.js"></script>
+</body>
+</html>

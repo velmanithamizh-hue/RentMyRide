@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RentMyRide - OTP Verification</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #eaf0ff, #f8faff);
+      color: #172033;
+    }
+
+    .otp-card {
+      width: 100%;
+      max-width: 410px;
+      padding: 30px 24px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.09);
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 25px;
+      margin: 0 0 14px;
+    }
+
+    .description {
+      color: #697386;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    #destination {
+      color: #315de8;
+      font-weight: bold;
+      overflow-wrap: anywhere;
+    }
+
+    .otp-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 25px 0;
+    }
+
+    .otp-inputs input {
+      width: 43px;
+      height: 50px;
+      border: 1px solid #ccd3e0;
+      border-radius: 9px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      outline: none;
+    }
+
+    .otp-inputs input:focus {
+      border-color: #315de8;
+      box-shadow: 0 0 0 2px #315de820;
+    }
+
+    .verify-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #315de8;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .verify-btn:disabled {
+      background: #aebbe8;
+      cursor: not-allowed;
+    }
+
+    #timer {
+      color: #315de8;
+      font-weight: bold;
+    }
+
+    .resend-btn {
+      border: none;
+      background: transparent;
+      color: #315de8;
+      font-size: 14px;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .resend-btn:disabled {
+      color: #999;
+      cursor: not-allowed;
+    }
+
+    #message {
+      min-height: 20px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: #697386;
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    @media (max-width: 360px) {
+      .otp-card {
+        padding: 25px 15px;
+      }
+
+      .otp-inputs {
+        gap: 5px;
+      }
+
+      .otp-inputs input {
+        width: 38px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="otp-card">
+
+    <div class="logo">🔐</div>
+
+    <h1>Verify Your Account</h1>
+
+    <p class="description">
+      
+      
+  We have sent an OTP to your registered email or phone number. Please enter it below.
+
+    </p>
+    <p class="description" style="margin-top:-10px;">Destination: <span id="destination"></span></p>
+
+    <form id="otpForm">
+      <div class="otp-inputs">
+        <input class="otp-digit" type="text" inputmode="numeric"
+          autocomplete="one-time-code" maxlength="1"
+          aria-label="OTP digit 1" required disabled>
+
+        <input class="otp-digit" type="text" inputmode="numeric"
+          maxlength="1" aria-label="OTP digit 2" required disabled>
+
+        <input class="otp-digit" type="text" inputmode="numeric"
+          maxlength="1" aria-label="OTP digit 3" required disabled>
+
+        <input class="otp-digit" type="text" inputmode="numeric"
+          maxlength="1" aria-label="OTP digit 4" required disabled>
+
+        <input class="otp-digit" type="text" inputmode="numeric"
+          maxlength="1" aria-label="OTP digit 5" required disabled>
+
+        <input class="otp-digit" type="text" inputmode="numeric"
+          maxlength="1" aria-label="OTP digit 6" required disabled>
+      </div>
+
+      <button class="verify-btn" id="verifyBtn" type="submit" disabled>
+        Verify OTP
+      </button>
+    </form>
+
+    <p class="description">
+      Code expires in <span id="timer">02:00</span>
+    </p>
+
+    <p class="description">Didn't receive the code?</p>
+
+    <button class="resend-btn" id="resendBtn" type="button" disabled>
+      Resend OTP
+    </button>
+
+    <p id="message" role="status" aria-live="polite"></p>
+
+    <a class="back-link" href="signup.html">
+      ← Back to Signup
+    </a>
+
+  </div>
+
+  <script>
+    const message = document.getElementById("message");
+    const timerDisplay = document.getElementById("timer");
+    const verifyBtn = document.getElementById("verifyBtn");
+    const resendBtn = document.getElementById("resendBtn");
+    const otpForm = document.getElementById("otpForm");
+    const digits = Array.from(document.querySelectorAll(".otp-digit"));
+    const contact = (sessionStorage.getItem("signupEmail") || "").trim().toLowerCase();
+    const destination = document.getElementById("destination");
+
+    let remainingSeconds = 300; // Backend OTP expiry is 5 minutes.
+    let countdown = null;
+    let timerExpired = true;
+    let sending = false;
+
+    destination.textContent = contact || "Email not provided";
+
+    function setMessage(text, color = "#315de8") {
+      message.style.color = color;
+      message.textContent = text;
+    }
+
+    function updateVerifyButton() {
+      const allFilled = digits.every(input => /^\d$/.test(input.value));
+      verifyBtn.disabled = !allFilled || timerExpired || sending;
+    }
+
+    function formatTime(seconds) {
+      const minutes = String(Math.floor(seconds / 60)).padStart(2, "0");
+      const secs = String(seconds % 60).padStart(2, "0");
+      return `${minutes}:${secs}`;
+    }
+
+    function enableDigits(enabled) {
+      digits.forEach(input => input.disabled = !enabled);
+    }
+
+    function startTimer() {
+      clearInterval(countdown);
+      remainingSeconds = 300;
+      timerExpired = false;
+      timerDisplay.textContent = "05:00";
+      resendBtn.disabled = true;
+      resendBtn.textContent = "Resend OTP";
+      digits.forEach(input => input.value = "");
+      enableDigits(true);
+      updateVerifyButton();
+      digits[0].focus();
+
+      countdown = setInterval(() => {
+        remainingSeconds -= 1;
+        timerDisplay.textContent = formatTime(remainingSeconds);
+        if (remainingSeconds <= 0) {
+          clearInterval(countdown);
+          timerExpired = true;
+          enableDigits(false);
+          verifyBtn.disabled = true;
+          resendBtn.disabled = false;
+          setMessage("OTP expired. You can now resend a new OTP.");
+        }
+      }, 1000);
+    }
+
+    async function sendOtp(isResend = false) {
+      if (sending) return;
+      if (!contact) {
+        setMessage("Email address is missing. Please go back and enter your Gmail.", "#dc2626");
+        resendBtn.disabled = false;
+        resendBtn.textContent = "Try sending OTP";
+        return;
+      }
+
+      sending = true;
+      resendBtn.disabled = true;
+      resendBtn.textContent = isResend ? "Sending new OTP..." : "Sending OTP...";
+      verifyBtn.disabled = true;
+      enableDigits(false);
+      setMessage(isResend ? "Sending a new OTP to your email..." : "Sending OTP to your email...");
+
+      try {
+        const response = await fetch("/api/otp/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contact, purpose: "signup" })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || data.message || "Could not send OTP.");
+
+        startTimer();
+        if (data.demo_otp) {
+          setMessage(`Demo mode: OTP is ${data.demo_otp}. Email is not configured.`, "#b45309");
+        } else {
+          setMessage(data.message || "OTP sent successfully. Check your inbox and spam folder.");
+        }
+      } catch (error) {
+        timerExpired = true;
+        enableDigits(false);
+        verifyBtn.disabled = true;
+        resendBtn.disabled = false;
+        resendBtn.textContent = "Try sending OTP again";
+        timerDisplay.textContent = "--:--";
+        setMessage(error.message || "OTP sending failed. Please try again.", "#dc2626");
+      } finally {
+        sending = false;
+      }
+    }
+
+    // Only digits; focus advances and backspace moves backward.
+    digits.forEach((input, index) => {
+      input.addEventListener("input", () => {
+        input.value = input.value.replace(/\D/g, "").slice(0, 1);
+        if (input.value && index < digits.length - 1) digits[index + 1].focus();
+        updateVerifyButton();
+        message.textContent = "";
+      });
+      input.addEventListener("keydown", event => {
+        if (event.key === "Backspace" && input.value === "" && index > 0) digits[index - 1].focus();
+      });
+      input.addEventListener("keypress", event => {
+        if (!/^\d$/.test(event.key)) event.preventDefault();
+      });
+    });
+
+    otpForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (timerExpired || sending) return;
+      const code = digits.map(input => input.value).join("");
+      if (!/^\d{6}$/.test(code)) {
+        setMessage("Please enter all 6 OTP digits.", "#dc2626");
+        return;
+      }
+
+      verifyBtn.disabled = true;
+      verifyBtn.textContent = "Verifying...";
+      try {
+        const response = await fetch("/api/otp/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contact, otp: code, purpose: "signup" })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || "OTP verification failed.");
+        clearInterval(countdown);
+        setMessage("OTP verified successfully! Redirecting...", "#15803d");
+        setTimeout(() => window.location.href = "create_password.html", 700);
+      } catch (error) {
+        setMessage(error.message || "Invalid OTP. Please try again.", "#dc2626");
+        updateVerifyButton();
+      } finally {
+        verifyBtn.textContent = "Verify OTP";
+      }
+    });
+
+    resendBtn.addEventListener("click", () => {
+      if (resendBtn.disabled || sending) return;
+      sendOtp(true);
+    });
+
+    // Send only once on page load; controls stay disabled while the request is pending.
+    sendOtp(false);
+  </script>
+  <script src="rentmyride-app.js"></script>
+</body>
+</html>

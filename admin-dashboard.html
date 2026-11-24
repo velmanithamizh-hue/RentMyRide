@@ -1,0 +1,381 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | RentMyRide</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7f6;
+      color: #26332e;
+    }
+
+    .sidebar {
+      width: 240px;
+      height: 100vh;
+      background: #123c2d;
+      color: white;
+      padding: 25px 18px;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: bold;
+      margin-bottom: 35px;
+    }
+
+    .logo span {
+      color: #75e0a0;
+    }
+
+    .nav-link {
+      display: block;
+      color: #e1eee7;
+      text-decoration: none;
+      padding: 13px 14px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #276448;
+      color: white;
+    }
+
+    .logout {
+      position: absolute;
+      bottom: 25px;
+      left: 18px;
+      right: 18px;
+      background: #d9534f;
+      border: none;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .main {
+      margin-left: 240px;
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .topbar h1 {
+      font-size: 27px;
+    }
+
+    .admin-label {
+      background: #e0f5e8;
+      color: #17643d;
+      padding: 10px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    .welcome {
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      margin-bottom: 25px;
+      box-shadow: 0 3px 12px #00000008;
+    }
+
+    .welcome h2 {
+      margin-bottom: 8px;
+    }
+
+    .welcome p {
+      color: #718078;
+      line-height: 1.6;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px #00000008;
+    }
+
+    .stat-card p {
+      color: #718078;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .stat-card h2 {
+      font-size: 30px;
+      color: #17643d;
+    }
+
+    .section {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px #00000008;
+      margin-bottom: 25px;
+    }
+
+    .section h2 {
+      margin-bottom: 18px;
+      font-size: 20px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .action-card {
+      border: 1px solid #e1e9e4;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .action-card h3 {
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+
+    .action-card p {
+      color: #718078;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    .action-card button {
+      background: #17643d;
+      color: white;
+      border: none;
+      padding: 11px 15px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .action-card button:hover {
+      background: #10472b;
+    }
+
+    .activity {
+      color: #718078;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 1000px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+
+      .logout {
+        position: static;
+        width: 100%;
+        margin-top: 15px;
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 18px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">RentMy<span>Ride</span></div>
+
+    <a class="nav-link active" href="admin-dashboard.html">
+      Dashboard
+    </a>
+
+    <a class="nav-link" href="admin-providers.html">
+      Manage Providers
+    </a>
+
+    <a class="nav-link" href="admin-vehicles.html">
+      Manage Vehicles
+    </a>
+
+    <a class="nav-link" href="admin-bookings.html">
+      Manage Bookings
+    </a>
+
+    <a class="nav-link" href="admin-reports.html">
+      Reports
+    </a>
+
+    <button class="logout" onclick="adminLogout()">
+      Logout
+    </button>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <div class="topbar">
+      <h1>Admin Dashboard</h1>
+      <div class="admin-label">Administrator</div>
+    </div>
+
+    <section class="welcome">
+      <h2>Welcome, Admin 👋</h2>
+      <p>
+        Manage rental providers, verify vehicles, and monitor
+        RentMyRide activities from one place.
+      </p>
+    </section>
+
+    <!-- Dashboard Statistics -->
+    <section class="stats">
+
+      <div class="stat-card">
+        <p>Total Providers</p>
+        <h2 id="totalProviders">0</h2>
+      </div>
+
+      <div class="stat-card">
+        <p>Pending Approvals</p>
+        <h2 id="pendingProviders">0</h2>
+      </div>
+
+      <div class="stat-card">
+        <p>Approved Providers</p>
+        <h2 id="approvedProviders">0</h2>
+      </div>
+
+      <div class="stat-card">
+        <p>Total Vehicles</p>
+        <h2 id="totalVehicles">0</h2>
+      </div>
+
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="section">
+      <h2>Quick Actions</h2>
+
+      <div class="actions">
+
+        <div class="action-card">
+          <h3>Provider Verification</h3>
+          <p>
+            Review rental shop details and verify provider documents.
+          </p>
+          <button onclick="openPage('admin-providers.html')">
+            View Providers
+          </button>
+        </div>
+
+        <div class="action-card">
+          <h3>Vehicle Management</h3>
+          <p>
+            Review vehicle information and manage vehicle listings.
+          </p>
+          <button onclick="openPage('admin-vehicles.html')">
+            View Vehicles
+          </button>
+        </div>
+
+        <div class="action-card">
+          <h3>Booking Management</h3>
+          <p>
+            View and manage customer vehicle rental bookings.
+          </p>
+          <button onclick="openPage('admin-bookings.html')">
+            View Bookings
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="section">
+      <h2>Recent Activity</h2>
+
+      <div class="activity">
+        <p>• Provider registrations will appear here.</p>
+        <p>• Vehicle verification updates will appear here.</p>
+        <p>• Customer booking updates will appear here.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Open another admin page
+    function openPage(pageName) {
+      window.location.href = pageName;
+    }
+
+    // Admin logout
+    function adminLogout() {
+      sessionStorage.removeItem("adminLoggedIn");
+      window.location.href = "admin-login.html";
+    }
+
+    // Demo dashboard values
+    // Real values will come from Firebase later.
+    document.getElementById("totalProviders").textContent = "0";
+    document.getElementById("pendingProviders").textContent = "0";
+    document.getElementById("approvedProviders").textContent = "0";
+    document.getElementById("totalVehicles").textContent = "0";
+  </script>
+
+  <script src="rentmyride-app.js"></script>
+</body>
+</html>
